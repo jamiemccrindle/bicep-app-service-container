@@ -21,12 +21,14 @@ jobs:
         inlineScript: |
           az bicep install
 
+    - uses: actions/checkout@v2
+
     - name: Deploy ACR
       uses: azure/CLI@v1
       with:
         azcliversion: 2.23.0
         inlineScript: |
-          DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep)
+          DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/acr/main.bicep)
           ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
           echo '::set-output name=ACR_NAME::$ACR_NAME'
     
@@ -36,3 +38,16 @@ jobs:
         azcliversion: 2.23.0
         inlineScript: |
           az acr login --name $ACR_NAME
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: $ACR_NAME/bicep-app-service-container:latest
