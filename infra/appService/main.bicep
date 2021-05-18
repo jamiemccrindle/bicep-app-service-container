@@ -45,10 +45,6 @@ resource siteName_resource 'Microsoft.Web/sites@2016-08-01' = {
           name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
           value: dockerRegistryPassword
         }
-        {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'false'
-        }
       ]
       linuxFxVersion: 'DOCKER|${dockerRegistryHost}/bicep-app-service-container:latest'
     }
