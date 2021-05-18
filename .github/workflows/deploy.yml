@@ -17,14 +17,14 @@ jobs:
     - name: Install Bicep
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.0.72
+        azcliversion: 2.23.0
         inlineScript: |
           az bicep install
 
     - name: Deploy ACR
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.0.72
+        azcliversion: 2.23.0
         inlineScript: |
           DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep)
           ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
@@ -33,6 +33,6 @@ jobs:
     - name: ACR Login
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.0.72
+        azcliversion: 2.23.0
         inlineScript: |
           az acr login --name $ACR_NAME
