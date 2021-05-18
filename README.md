@@ -1,0 +1,1 @@
+# bicep-app-service-container
