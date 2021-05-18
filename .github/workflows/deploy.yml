@@ -1,0 +1,38 @@
+name: deploy
+
+on:
+  workflow_dispatch: 
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Install Bicep
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az bicep install
+
+    - name: Deploy ACR
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep)
+          ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
+          echo '::set-output name=ACR_NAME::$ACR_NAME'
+    
+    - name: ACR Login
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az acr login --name $ACR_NAME
