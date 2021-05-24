@@ -32,10 +32,8 @@ jobs:
           DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/acr/main.bicep)
           ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
           ACR_LOGIN_SERVER=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrLoginServer.value')
-          echo $ACR_LOGIN_SERVER
-          echo $ACR_NAME
-          echo '::set-output name=ACR_LOGIN_SERVER::$ACR_LOGIN_SERVER'
-          echo '::set-output name=ACR_NAME::$ACR_NAME'
+          echo "::set-output name=ACR_LOGIN_SERVER::$ACR_LOGIN_SERVER"
+          echo "::set-output name=ACR_NAME::$ACR_NAME"
     
     - name: ACR Login
       id: acr-login
@@ -43,11 +41,10 @@ jobs:
       with:
         azcliversion: 2.23.0
         inlineScript: |
-          echo az acr login --name ${{ steps.deploy-acr.outputs.ACR_NAME }} --expose-token
           LOGIN=$(az acr login --name "${{ steps.deploy-acr.outputs.ACR_NAME }}" --expose-token)
           ACR_ACCESS_TOKEN=$(echo $LOGIN | jq -r '.accessToken')
-          echo '::add-mask::$ACR_ACCESS_TOKEN'
-          echo '::set-output name=ACR_ACCESS_TOKEN::$ACR_ACCESS_TOKEN'
+          echo "::add-mask::$ACR_ACCESS_TOKEN"
+          echo "::set-output name=ACR_ACCESS_TOKEN::$ACR_ACCESS_TOKEN"
 
     - name: Docker Login
       run: |
