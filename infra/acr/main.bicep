@@ -19,7 +19,7 @@ param location string = resourceGroup().location
   'Premium'
 ])
 @description('Tier of your Azure Container Registry.')
-param acrSku string = 'Basic'
+param acrSku string = 'Premium'
 
 // azure container registry
 resource acr 'Microsoft.ContainerRegistry/registries@2019-12-01-preview' = {

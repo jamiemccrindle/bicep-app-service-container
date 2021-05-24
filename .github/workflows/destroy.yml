@@ -1,0 +1,26 @@
+name: destroy
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+
+  destroy:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - uses: actions/checkout@v2
+
+    - name: Deploy ACR
+      id: deploy-acr
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.23.0
+        inlineScript: |
+          DEPLOYMENT=$(az deployment group create --name destroy --resource-group rg-bicep-app-service-container-001 --template .github/workflows/empty.json --mode Complete")
