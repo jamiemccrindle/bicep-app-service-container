@@ -37,7 +37,7 @@ resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01
   name: 'ownerRoleAssignment'
   scope: acr.id
   properties: {
-    roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
+    roleDefinitionId: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
     principalId: ownerPrincipalId
   }
 }
