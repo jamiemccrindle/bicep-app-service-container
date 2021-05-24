@@ -7,6 +7,9 @@ param acrName string = 'acr001${uniqueString(resourceGroup().id)}' // must be gl
 @description('Enable admin user that have push / pull permission to the registry.')
 param acrAdminUserEnabled bool = false
 
+@description('The owner of this ACR.')
+param ownerPrincipalId bool = false
+
 @description('Specifies the Azure location where the acr should be created.')
 param location string = resourceGroup().location
 
@@ -27,6 +30,15 @@ resource acr 'Microsoft.ContainerRegistry/registries@2019-12-01-preview' = {
   }
   properties: {
     adminUserEnabled: acrAdminUserEnabled
+  }
+}
+
+resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01-preview' = {
+  name: 'ownerRoleAssignment'
+  scope: acr.id
+  properties: {
+    roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
+    principalId: ownerPrincipalId
   }
 }
 
