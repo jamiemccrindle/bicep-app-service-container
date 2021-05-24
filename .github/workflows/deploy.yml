@@ -31,7 +31,7 @@ jobs:
       with:
         azcliversion: 2.23.0
         inlineScript: |
-          PRINCIPAL_ID=$(az ad signed-in-user show --query objectId -o tsv)
+          PRINCIPAL_ID=$(az account show --query id -o tsv)
           DEPLOYMENT=$(az deployment group create --name nextbicep --resource-group rg-bicep-app-service-container-001 --template-file ./infra/acr/main.bicep --parameters "{ \"ownerPrincipalId\": { \"value\": \"${PRINCIPAL_ID}\" } }")
           ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
           ACR_LOGIN_SERVER=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrLoginServer.value')
