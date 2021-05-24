@@ -37,9 +37,12 @@ jobs:
           DEPLOYMENT=$(az deployment group create --name deploy --resource-group rg-bicep-app-service-container-001 --template-file ./infra/acr/main.bicep --parameters "{ \"ownerPrincipalId\": { \"value\": \"${PRINCIPAL_ID}\" } }")
           ACR_NAME=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrName.value')
           ACR_LOGIN_SERVER=$(echo $DEPLOYMENT | jq -r '.properties.outputs.acrLoginServer.value')
-          BICEP_APP_SERVICE_CONTAINER_TOKEN_ID=$(echo $DEPLOYMENT | jq -r '.properties.outputs.bicepAppServiceContainerTokenId.value')
+          # todo: this should run on a schedule and be stored as a secret
+          ACR_PULL_TOKEN=$(az acr token credential generate -n bicepAppServiceContainerToken -r $ACR_NAME --expiration-in-days 30 --query passwords[0].value -o tsv)
           echo "::set-output name=ACR_LOGIN_SERVER::$ACR_LOGIN_SERVER"
           echo "::set-output name=ACR_NAME::$ACR_NAME"
+          echo "::add-mask::$ACR_PULL_TOKEN"
+          echo "::set-output name=ACR_PULL_TOKEN::$ACR_PULL_TOKEN"
     
     - name: ACR Login
       id: acr-login
@@ -78,5 +81,10 @@ jobs:
         azcliversion: 2.23.0
         inlineScript: |
           PRINCIPAL_ID=$(az ad sp show --id $ARM_CLIENT_ID --query objectId -o tsv)
-          DEPLOYMENT=$(az deployment group create --name deploy --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep --parameters "{ \"tokenId\": { \"value\": \"${{ steps.deploy-acr.outputs.BICEP_APP_SERVICE_CONTAINER_TOKEN_ID }}\" }, \"dockerRegistryHost\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_LOGIN_SERVER }}\" } }")
+          DEPLOYMENT=$( \
+            az deployment group create \
+              --name deploy --resource-group rg-bicep-app-service-container-001 \
+              --template-file ./infra/appService/main.bicep \
+              --parameters "{ \"dockerRegisteryPassword\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_PULL_TOKEN }}\" }, \"dockerRegistryHost\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_LOGIN_SERVER }}\" } }" \
+            )
           echo $DEPLOYMENT

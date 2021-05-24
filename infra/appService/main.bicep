@@ -3,7 +3,7 @@ param siteName string = 'bicep-app-service-container'
 
 param dockerRegistryHost string
 @secure()
-param tokenId string
+param token string
 
 var servicePlanName = 'plan-${siteName}-001'
 
@@ -38,11 +38,11 @@ resource siteName_resource 'Microsoft.Web/sites@2016-08-01' = {
         }
         {
           name: 'DOCKER_REGISTRY_SERVER_USERNAME'
-          value: reference(tokenId).name
+          value: 'bicepAppServiceContainer'
         }
         {
           name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
-          value: reference(tokenId).properties.credentials.passwords[0].value
+          value: token
         }
       ]
       linuxFxVersion: 'DOCKER|${dockerRegistryHost}/bicep-app-service-container:latest'

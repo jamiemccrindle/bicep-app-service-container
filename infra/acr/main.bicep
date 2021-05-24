@@ -44,7 +44,7 @@ resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01
 
 resource bicepAppServiceContainerScopeMap 'Microsoft.ContainerRegistry/registries/scopeMaps@2020-11-01-preview' = {
   parent: acr
-  name: 'bicepAppServiceContainerScopeMap'
+  name: 'bicepAppServiceContainer'
   properties: {
     actions: [
       'repositories/bicep-app-service-container/content/read'
@@ -55,7 +55,7 @@ resource bicepAppServiceContainerScopeMap 'Microsoft.ContainerRegistry/registrie
 
 resource bicepAppServiceContainerToken 'Microsoft.ContainerRegistry/registries/tokens@2020-11-01-preview' = {
   parent: acr
-  name: 'bicepAppServiceContainerToken'
+  name: 'bicepAppServiceContainer'
   properties: {
     scopeMapId: bicepAppServiceContainerScopeMap.id
     status: 'enabled'
@@ -64,4 +64,3 @@ resource bicepAppServiceContainerToken 'Microsoft.ContainerRegistry/registries/t
 
 output acrLoginServer string = acr.properties.loginServer
 output acrName string = acrName
-output bicepAppServiceContainerTokenId string = bicepAppServiceContainerToken.id
