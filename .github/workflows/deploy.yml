@@ -43,6 +43,7 @@ jobs:
       with:
         azcliversion: 2.23.0
         inlineScript: |
+          echo az acr login --name ${{ steps.deploy-acr.outputs.ACR_NAME }} --expose-token
           LOGIN=$(az acr login --name "${{ steps.deploy-acr.outputs.ACR_NAME }}" --expose-token)
           ACR_ACCESS_TOKEN=$(echo $LOGIN | jq -r '.accessToken')
           echo '::add-mask::$ACR_ACCESS_TOKEN'
