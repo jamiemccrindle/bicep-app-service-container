@@ -42,5 +42,26 @@ resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01
   }
 }
 
+resource bicepAppServiceContainerScopeMap 'Microsoft.ContainerRegistry/registries/scopeMaps@2020-11-01-preview' = {
+  parent: acr
+  name: 'bicepAppServiceContainerScopeMap'
+  properties: {
+    actions: [
+      'repositories/bicep-app-service-container/content/read'
+      'repositories/bicep-app-service-container/metadata/read'
+    ]
+  }
+}
+
+resource bicepAppServiceContainerToken 'Microsoft.ContainerRegistry/registries/tokens@2020-11-01-preview' = {
+  parent: acr
+  name: 'bicepAppServiceContainerToken'
+  properties: {
+    scopeMapId: bicepAppServiceContainerScopeMap.id
+    status: 'enabled'
+  }
+}
+
 output acrLoginServer string = acr.properties.loginServer
 output acrName string = acrName
+output bicepAppServiceContainerTokenId string = bicepAppServiceContainerToken.id
