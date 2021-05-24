@@ -78,5 +78,5 @@ jobs:
         azcliversion: 2.23.0
         inlineScript: |
           PRINCIPAL_ID=$(az ad sp show --id $ARM_CLIENT_ID --query objectId -o tsv)
-          DEPLOYMENT=$(az deployment group create --name deploy --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep --parameters "{ \"tokenId\": { \"value\": \"${{ steps.deploy-acr.outputs.BICEP_APP_SERVICE_CONTAINER_TOKEN_ID }}\" } }")
+          DEPLOYMENT=$(az deployment group create --name deploy --resource-group rg-bicep-app-service-container-001 --template-file ./infra/appService/main.bicep --parameters "{ \"tokenId\": { \"value\": \"${{ steps.deploy-acr.outputs.BICEP_APP_SERVICE_CONTAINER_TOKEN_ID }}\" }, \"dockerRegistryHost\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_LOGIN_SERVER }}\" } }")
           echo $DEPLOYMENT
