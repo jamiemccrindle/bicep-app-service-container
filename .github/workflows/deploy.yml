@@ -29,7 +29,7 @@ jobs:
       id: deploy-acr
       uses: azure/CLI@v1
       env:
-        ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       with:
         azcliversion: 2.23.0
         inlineScript: |
