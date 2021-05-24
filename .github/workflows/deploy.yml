@@ -85,6 +85,6 @@ jobs:
             az deployment group create \
               --name deploy --resource-group rg-bicep-app-service-container-001 \
               --template-file ./infra/appService/main.bicep \
-              --parameters "{ \"dockerRegisteryPassword\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_PULL_TOKEN }}\" }, \"dockerRegistryHost\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_LOGIN_SERVER }}\" } }" \
+              --parameters "{ \"token\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_PULL_TOKEN }}\" }, \"dockerRegistryHost\": { \"value\": \"${{ steps.deploy-acr.outputs.ACR_LOGIN_SERVER }}\" } }" \
             )
           echo $DEPLOYMENT
