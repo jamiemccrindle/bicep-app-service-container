@@ -18,7 +18,7 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - name: Deploy ACR
+    - name: Destroy
       id: deploy-acr
       uses: azure/CLI@v1
       with:
