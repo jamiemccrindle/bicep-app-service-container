@@ -1,8 +1,9 @@
 FROM mcr.microsoft.com/vscode/devcontainers/dotnetcore:0-5.0
 
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2 openssh \
-    && echo "root:Docker!" | chpasswd
+    && apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2 openssh
+
+RUN echo "root:Docker!" | chpasswd
 
 # Install the Azure CLI
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list \
