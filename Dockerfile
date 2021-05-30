@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/vscode/devcontainers/dotnetcore:0-5.0
 
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2 openssh
+    && apt-get -y install --no-install-recommends apt-transport-https curl ca-certificates lsb-release gnupg2 openssh-server nginx
 
 RUN echo "root:Docker!" | chpasswd
 
@@ -17,4 +17,6 @@ RUN az bicep install
 COPY sshd_config /etc/ssh/
 
 # Open port 2222 for SSH access
-EXPOSE 5000 2222
+EXPOSE 80 2222
+
+CMD /usr/sbin/service nginx start && /usr/bin/sleep infinity
