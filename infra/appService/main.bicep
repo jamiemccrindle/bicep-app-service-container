@@ -16,8 +16,7 @@ resource servicePlan 'Microsoft.Web/serverfarms@2016-09-01' = {
     reserved: true
   }
   sku: {
-    tier: 'Standard'
-    name: 'S1'
+    name: 'P1v3'
   }
   dependsOn: []
 }
