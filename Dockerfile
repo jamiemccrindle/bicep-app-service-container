@@ -21,5 +21,5 @@ COPY sshd_config /etc/ssh/
 # Open port 2222 for SSH access
 EXPOSE 80 2222
 
-# Start up nginx
+# Start up nginx and ssh and then sleep to keep the container alive
 CMD /usr/sbin/service nginx start && /usr/sbin/service ssh start && /usr/bin/sleep infinity
