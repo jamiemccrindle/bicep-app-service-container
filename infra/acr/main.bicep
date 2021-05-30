@@ -33,6 +33,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2019-12-01-preview' = {
   }
 }
 
+// assign an owner role to the ACR
 resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01-preview' = {
   name: guid('${acr.id}/${ownerPrincipalId}/owner')
   scope: acr
@@ -42,6 +43,7 @@ resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2018-01-01
   }
 }
 
+// create a scope map for your repository
 resource bicepAppServiceContainerScopeMap 'Microsoft.ContainerRegistry/registries/scopeMaps@2020-11-01-preview' = {
   parent: acr
   name: 'bicepAppServiceContainer'
